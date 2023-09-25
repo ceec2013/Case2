@@ -1,0 +1,112 @@
+unit AddTrade;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, OMSC;
+
+type
+  TfrmAddTrade = class(TForm)
+    lblSymbol: TLabel;
+    lblQuantity: TLabel;
+    lblPrice: TLabel;
+    DownLine: TShape;
+    lblSide: TLabel;
+    ValLabel: TLabel;
+    lblValue: TLabel;
+    btnClose: TButton;
+    btnSend: TButton;
+    edtSymbol: TEdit;
+    cmbSide: TComboBox;
+    edtQuantity: TEdit;
+    edtPrice: TEdit;
+    procedure edtQuantityChange(Sender: TObject);
+    procedure edtPriceChange(Sender: TObject);
+    procedure edtPriceKeyPress(Sender: TObject; var Key: Char);
+    procedure edtQuantityKeyPress(Sender: TObject; var Key: Char);
+    procedure btnSendClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure ComputeViaFormula;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmAddTrade: TfrmAddTrade;
+
+implementation
+
+uses OMSCProcess;
+
+{$R *.dfm}
+
+procedure TfrmAddTrade.edtPriceChange(Sender: TObject);
+begin
+  ComputeViaFormula;
+end;
+
+procedure TfrmAddTrade.edtPriceKeyPress(Sender: TObject; var Key: Char);
+begin
+  if not (Key in ['0'..'9', '.']) then
+  begin
+     Key := #0;
+  end;
+end;
+
+procedure TfrmAddTrade.edtQuantityChange(Sender: TObject);
+begin
+  ComputeViaFormula;
+end;
+
+procedure TfrmAddTrade.edtQuantityKeyPress(Sender: TObject; var Key: Char);
+begin
+  if not (Key in ['0'..'9']) then
+  begin
+     Key := #0;
+  end;
+end;
+
+procedure TfrmAddTrade.btnCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmAddTrade.btnSendClick(Sender: TObject);
+var
+  side : integer;
+  stock : string;
+  volume : int64;
+  price : double;
+  value : double;
+  clordid : string;
+begin
+  side := cmbSide.ItemIndex;
+  stock := edtSymbol.Text;
+  volume := strtoint64(edtQuantity.text);
+  price := strtofloat(edtPrice.Text);
+  value := volume*price;
+  clordid := username + generateUniqueId;
+
+  frmMain.ClientPort.Send('35=8' + SOH +
+                          FIX_Side + intToStr(side) + SOH +
+                          FIX_Symbol + stock + SOH +
+                          FIX_LastQty + inttostr(volume) + SOH +
+                          FIX_LastPX + floattostr(price) + SOH +
+                          FIX_TraderID + username + SOH +
+                          FIX_ClOrdID + clordid);
+end;
+
+procedure TfrmAddTrade.ComputeViaFormula;
+var
+  dblQuantity, dblPrice, dblValue: double;
+begin
+  dblQuantity := StrToFloat(edtQuantity.Text);
+  dblPrice := StrToFloat(edtPrice.Text);
+  dblValue := dblPrice * dblQuantity;
+  ValLabel.Caption := FormatFloat(FMT_MONEY_DISPLAY, dblValue);
+end;
+
+end.

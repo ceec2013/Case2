@@ -1,0 +1,101 @@
+unit OMSCProcess;
+
+interface
+
+uses Classes, SysUtils, Windows, FileCtrl, Dialogs, OMSC;
+
+const
+  SOH = #1;
+  FIX_MsgType = '35';
+  FIX_Text = '58';
+  FIX_TType = '9001';
+
+  FIX_LoginReply = 'LR';
+
+  FMT_MONEY_DISPLAY       = '#,##0.00#####';
+
+var
+  username : String;
+
+function GetFIXTagValue(strMsgType : string; var strValue : string) : string;
+procedure FIXParseMsg(MsgType : string; var MsgStr : string);
+procedure FIXProcessLoginReply(text : string; ttype : Integer);
+
+implementation
+
+uses login;
+
+function GetFIXTagValue(strMsgType : string; var strValue : string) : string;
+var
+  nIdx1, nIdx2: integer;
+  strMsgTypeSOH : string;
+begin
+  nIdx1 := pos(strMsgType, strValue);
+
+  if (nIdx1 > 1) and (strValue[nIdx1 - 1] <> SOH) then
+    begin
+      strMsgTypeSOH := SOH + strMsgType;
+      nIdx1 := pos(strMsgTypeSOH, strValue);
+      if (nIdx1 > 0) then nIdx1 := pos(strMsgTypeSOH, strValue) + 1;
+    end;
+
+  if (nIdx1 = 0) then
+    begin
+      result := '';
+    end
+  else if (nIdx1 = 1) or (strValue[nIdx1 - 1] = SOH) then
+    begin
+      nIdx2 := nIdx1;
+      repeat
+        if strValue[nIdx2] = SOH then break
+        else inc(nIdx2);
+      until nIdx2 > length(strValue);
+
+      if nIdx2 <= length(strValue) then
+        begin
+          result := trim(copy(strValue, nIdx1 + length(strMsgType)+1, (nIdx2 - (nIdx1 + length(strMsgType)))));
+          delete(strValue, nIdx1, (nIdx2 - nIdx1) + 1);
+        end
+      else
+        begin
+          result:='';
+        end;
+    end;
+end;
+
+procedure FIXParseMsg(MsgType : string; var MsgStr : string);
+var
+ text : String;
+ tradertype : Integer;
+begin
+  if MsgType = FIX_LoginReply then
+    begin
+      text := GetFIXTagValue(FIX_Text, MsgStr);
+      tradertype := StrToInt(GetFIXTagValue(FIX_TType, MsgStr));
+
+      //if (MsgStr <> '') then raise EExtraTagsFound.Create(ReceivedHeader.MsgSeqNum, FIX_SLR_TagNotDefined, ERR_ExtraTagsFound);
+
+      FIXProcessLoginReply(text, tradertype);
+    end
+end;
+
+procedure FIXProcessLoginReply(text : string; ttype : Integer);
+begin
+  if text = 'OK' then
+  begin
+    frmLogin.Close;
+
+    if ttype = 1 then
+    begin
+      frmMain.btnViewTrader.Visible := False;
+      frmMain.btnEditTrade.Visible := False;
+    end;
+
+  end
+  else
+  begin
+    showmessage(text);
+  end;
+end;
+
+end.

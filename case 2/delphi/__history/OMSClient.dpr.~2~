@@ -1,0 +1,20 @@
+program OMSClient;
+
+uses
+  Vcl.Forms,
+  OMSC in 'OMSC.pas' {frmMain};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmMain, frmMain);
+
+  if not Assigned(frmLogin) then
+  begin
+    frmLogin := TfrmLogin.Create(Application);
+  end;
+  frmLogin.Show;
+  Application.Run;
+end.

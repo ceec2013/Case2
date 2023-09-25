@@ -1,0 +1,68 @@
+unit OMSC;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvUtil, IdBaseComponent, IdComponent,
+  IdTCPConnection, IdTCPClient, Vcl.StdCtrls, Vcl.Grids, AdvObj, BaseGrid,
+  AdvGrid, ipwcore, ipwipport;
+
+type
+  TfrmMain = class(TForm)
+    AdvStringGrid1: TAdvStringGrid;
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    ClientPort: TipwIPPort;
+    Button4: TButton;
+    procedure FormShow(Sender: TObject);
+    procedure ClientPortConnected(Sender: TObject; StatusCode: Integer;
+      const Description: string);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure InitializeConnection(Username : String; Password : String);
+  end;
+
+var
+  frmMain: TfrmMain;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmMain.Button4Click(Sender: TObject);
+begin
+  if button4.Caption = 'connected' then
+  begin
+    ClientPort.Connected := false;
+    button4.Caption := 'disconnected';
+  end
+  else
+  begin
+    ClientPort.Connected := true;
+    button4.Caption := 'connected';
+  end;
+
+end;
+
+procedure TfrmMain.ClientPortConnected(Sender: TObject; StatusCode: Integer;
+  const Description: string);
+begin
+  ClientPort.Send('35=A' + #1 + '553=Admin' + #1 + '554=Admin');
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  ClientPort.Connected := true;
+end;
+
+procedure TfrmMain.InitializeConnection(Username : String; Password : String);
+begin
+  ClientPort.Send('35=A' + #1 + '553='+ Username + #1 + '554=' + Password);
+end;
+
+end.

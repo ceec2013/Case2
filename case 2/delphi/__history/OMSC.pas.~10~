@@ -1,0 +1,68 @@
+unit OMSC;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvUtil, IdBaseComponent, IdComponent,
+  IdTCPConnection, IdTCPClient, Vcl.StdCtrls, Vcl.Grids, AdvObj, BaseGrid,
+  AdvGrid, ipwcore, ipwipport;
+
+type
+  TfrmMain = class(TForm)
+    AdvStringGrid1: TAdvStringGrid;
+    btnViewTrader: TButton;
+    btnAddTrade: TButton;
+    btnEditTrade: TButton;
+    ClientPort: TipwIPPort;
+    procedure ClientPortDataIn(Sender: TObject; Text: string; EOL: Boolean);
+    procedure btnAddTradeClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure InitializeConnection(Username : String; Password : String);
+    procedure ProcessData(Text : string);
+  end;
+
+var
+  frmMain: TfrmMain;
+
+implementation
+
+uses OMSCProcess, AddTrade;
+
+{$R *.dfm}
+
+procedure TfrmMain.btnAddTradeClick(Sender: TObject);
+begin
+  if not Assigned(frmAddTrade) then
+  begin
+    frmAddTrade := TfrmAddTrade.Create(Application);
+  end;
+  frmAddTrade.Show;
+end;
+
+procedure TfrmMain.ClientPortDataIn(Sender: TObject; Text: string;
+  EOL: Boolean);
+begin
+  ProcessData(Text);
+end;
+
+procedure TfrmMain.InitializeConnection(Username : String; Password : String);
+begin
+  ClientPort.Connected := true;
+  ClientPort.Send('35=A' + #1 + '553='+ Username + #1 + '554=' + Password);
+end;
+
+procedure TfrmMain.ProcessData(Text : string);
+var
+  strMsgType : string;
+begin
+  strMsgType := GetFIXTagValue(FIX_MsgType, Text);
+  if strMsgType <> '' then
+    FIXParseMsg(strMsgType, Text);
+end;
+
+
+end.

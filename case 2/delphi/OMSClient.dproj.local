@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/09/14 13:11:17.000.071,=C:\Users\Camille Cabaysa\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/09/24 23:42:46.587,=C:\Users\Camille Cabaysa\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/09/24 23:46:57.552,C:\PythonScripts\case 2\delphi\OMSC.dfm=C:\Users\Camille Cabaysa\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2023/09/24 23:46:57.552,C:\PythonScripts\case 2\delphi\OMSC.pas=C:\Users\Camille Cabaysa\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/09/24 23:47:12.610,C:\PythonScripts\case 2\delphi\OMSClient.dproj=C:\Users\Camille Cabaysa\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2023/09/25 02:47:50.678,=C:\PythonScripts\case 2\delphi\Unit1.pas</Transaction>
+    <Transaction>2023/09/25 02:52:06.711,C:\PythonScripts\case 2\delphi\login.pas=C:\PythonScripts\case 2\delphi\Unit1.pas</Transaction>
+    <Transaction>2023/09/25 02:52:06.711,C:\PythonScripts\case 2\delphi\login.dfm=C:\PythonScripts\case 2\delphi\Unit1.dfm</Transaction>
+    <Transaction>2023/09/25 03:10:24.959,=C:\PythonScripts\case 2\delphi\Unit1.pas</Transaction>
+    <Transaction>2023/09/25 03:10:39.173,C:\PythonScripts\case 2\delphi\OMSCProcess.pas=C:\PythonScripts\case 2\delphi\Unit1.pas</Transaction>
+    <Transaction>2023/09/25 04:13:34.516,=C:\PythonScripts\case 2\delphi\Unit1.pas</Transaction>
+    <Transaction>2023/09/25 04:16:17.303,C:\PythonScripts\case 2\delphi\AddTrade.dfm=C:\PythonScripts\case 2\delphi\Unit1.dfm</Transaction>
+    <Transaction>2023/09/25 04:16:17.303,C:\PythonScripts\case 2\delphi\AddTrade.pas=C:\PythonScripts\case 2\delphi\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>
